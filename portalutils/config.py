@@ -11,8 +11,8 @@ class Configure(object):
 
     def __init__(self):
         self.store = {
-            'alias': 'localhost:8888/api/v1/alias',
-            'shortURL': 'localhost:8888/api/v1/shortURL',
+            'alias': 'http://localhost:8888/api/v1/alias',
+            'shortURL': 'http://localhost:8888/api/v1/shortURL',
         }
 
     def register(self, key: str, value: str):
