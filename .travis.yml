@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+python:
+  - "3.6"
+
+before_install:
+  - docker run -p 3307:3306 --env MYSQL_ROOT_PASSWORD=root --env MYSQL_DATABASE=portal --name local-mysql -d mysql:5
+  - docker run -p 11212:11211 --name local-memcached -d memcached:alpine
+  - export MEMCACHED_ADDRESS=localhost
+  - export DB_PORT=3307
+  - docker run -p 8888:8888 --name local-portal -d finalhacker/portal
+
+install:
+  - python setup.py install
+
+script:
+  - sleep 15 && ./unittest.sh
