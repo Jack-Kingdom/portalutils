@@ -1,5 +1,5 @@
 # TODO List
 
-- README.md
-- add wiki
-- upload package to pypi
+- ~~README.md~~
+- add wiki and documentation
+- ~~upload package to pypi~~
