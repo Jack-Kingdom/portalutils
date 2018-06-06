@@ -1,5 +1,5 @@
 """
-some utilitty, decorator in this file.
+some utilities, decorators in this file.
 """
 import functools
 

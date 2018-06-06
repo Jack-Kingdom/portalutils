@@ -20,3 +20,14 @@ class ServerError(CustomException):
 class NotFoundError(CustomException):
     # response status code 404
     pass
+
+
+class UnknownError(CustomException):
+    pass
+
+
+code2exception_mapper = {
+    400: ArgumentsError,
+    404: NotFoundError,
+    500: ServerError,
+}

@@ -25,25 +25,37 @@ class Base(object):
         else:
             raise RuntimeError('args too many.')
 
-        if res.status_code == 400:
-            raise ArgumentsError(res.content)
-        else:
-            assert res.status_code == 200
+        if res.status_code == 200:
             rst = res.json()
             assert 'src' in rst
             return rst['src']
+        else:
+            content = res.content.decode('utf-8')
+            raise code2exception_mapper[res.status_code](content) \
+                if res.status_code in code2exception_mapper else UnknownError(content)
 
     @trigger(before=_check)
-    def update(self, src, dst):
-
+    def update(self, src: str, dst: str):
         res = requests.put(urljoin(self.baseURL + '/', src), json.dumps({'dst': dst}))
+        if res.status_code != 200:
+            content = res.content.decode('utf-8')
+            raise code2exception_mapper[res.status_code](content) \
+                if res.status_code in code2exception_mapper else UnknownError(content)
 
     @trigger(before=_check)
     def retrieve(self, src):
+        res = requests.get(urljoin(self.baseURL + '/', src), allow_redirects=False)
+        if res.status_code not in (301, 302):
+            content = res.content.decode('utf-8')
+            raise code2exception_mapper[res.status_code](content) \
+                if res.status_code in code2exception_mapper else UnknownError(content)
 
-        res = requests.get(urljoin(self.baseURL + '/', src))
+        return res.headers['Location']
 
     @trigger(before=_check)
     def delete(self, src):
-
-        res = requests.put(urljoin(self.baseURL + '/', src))
+        res = requests.delete(urljoin(self.baseURL + '/', src))
+        if res.status_code != 200:
+            content = res.content.decode('utf-8')
+            raise code2exception_mapper[res.status_code](content) \
+                if res.status_code in code2exception_mapper else UnknownError(content)
