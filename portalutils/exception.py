@@ -8,4 +8,15 @@ class CustomException(Exception):
 
 
 class ArgumentsError(CustomException):
+    # response status code 400
+    pass
+
+
+class ServerError(CustomException):
+    # response status code 500
+    pass
+
+
+class NotFoundError(CustomException):
+    # response status code 404
     pass
