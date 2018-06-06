@@ -18,4 +18,4 @@ install:
   - python setup.py install
 
 script:
-  - sleep 15 && ./unittest.sh
+  - sleep 20 && ./unittest.sh
