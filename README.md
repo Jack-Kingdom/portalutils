@@ -4,6 +4,11 @@
 portal access utils.
 ![portalutils](https://raw.githubusercontent.com/wiki/Jack-Kingdom/portalutils/assets/portal.jpg)
 
+## Install
+```shell
+pip install portalutils
+```
+
 ## Documentation
 Check [wiki](https://github.com/Jack-Kingdom/portalutils/wiki) for details.
 
