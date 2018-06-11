@@ -8,13 +8,16 @@ from .config import Configure
 
 class Base(object):
     def __init__(self, key):
-        self.baseURL = Configure().get(key)
+        self.key = key
 
     def _check(self, *args, **kwargs):
         if not self.baseURL:
             raise RuntimeError('baseURL must init and supplied')
 
-    @trigger(before=_check)
+    def _refresh(self, *args, **kwargs):
+        self.baseURL = Configure().get(self.key)
+
+    @trigger(before=(_refresh, _check))
     def create(self, *args):
         if len(args) == 1:
             dst, = args
@@ -34,7 +37,7 @@ class Base(object):
             raise code2exception_mapper[res.status_code](content) \
                 if res.status_code in code2exception_mapper else UnknownError(content)
 
-    @trigger(before=_check)
+    @trigger(before=(_refresh, _check))
     def update(self, src: str, dst: str):
         res = requests.put(urljoin(self.baseURL + '/', src), json.dumps({'dst': dst}))
         if res.status_code != 200:
@@ -42,7 +45,7 @@ class Base(object):
             raise code2exception_mapper[res.status_code](content) \
                 if res.status_code in code2exception_mapper else UnknownError(content)
 
-    @trigger(before=_check)
+    @trigger(before=(_refresh, _check))
     def retrieve(self, src):
         res = requests.get(urljoin(self.baseURL + '/', src), allow_redirects=False)
         if res.status_code not in (301, 302):
@@ -52,7 +55,7 @@ class Base(object):
 
         return res.headers['Location']
 
-    @trigger(before=_check)
+    @trigger(before=(_refresh, _check))
     def delete(self, src):
         res = requests.delete(urljoin(self.baseURL + '/', src))
         if res.status_code != 200:

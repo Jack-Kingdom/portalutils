@@ -23,9 +23,10 @@ def trigger(before=None, after=None):
     def wrapper(func):
         @functools.wraps(func)
         def inner_wrapper(*args, **kwargs):
-            before(*args, **kwargs) if before and callable(before) else None
+            [m(*args, **kwargs) for m in iter(before)] if before else None
             rst = func(*args, **kwargs)
-            after(*args, **kwargs) if after and callable(after) else None
+            [m(*args, **kwargs) for m in iter(after)] if after else None
+
             return rst
 
         return inner_wrapper
